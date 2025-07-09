@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing Calculator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f4f6fb;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .calculator {
+      background: #fff;
+      padding: 2rem 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      max-width: 350px;
+      width: 100%;
+    }
+    .calculator h2 {
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+      color: #333;
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.4rem;
+      color: #555;
+      font-weight: 500;
+    }
+    input {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+    .result {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: #f0f7fa;
+      border-radius: 8px;
+      text-align: left;
+      font-size: 1.1rem;
+      color: #0077b6;
+      font-weight: bold;
+    }
+    .result span {
+      float: right;
+      color: #222;
+      font-weight: normal;
+    }
+    .result .final {
+      color: #0077b6;
+      font-size: 1.6rem;
+      font-weight: 900;
+      display: block;
+      margin-top: 0.7rem;
+      text-align: center;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 8px rgba(0,119,182,0.08);
+    }
+    @media (max-width: 500px) {
+      .calculator {
+        padding: 1rem;
+        max-width: 100%;
+      }
+    }
+  </style>
+    <!-- html2canvas CDN for screenshot functionality -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+</head>
+<body>
+  <div style="max-width: 350px; margin: 2rem auto 0 auto;">
+    <div class="form-group" style="margin-bottom: 1.2rem;">
+      <label for="companyName" style="font-weight:600; color:#0077b6;">Company Name</label>
+      <input type="text" id="companyName" placeholder="Enter Company Name" style="font-size:1.1rem; font-weight:600; border:2px solid #0077b6;">
+    </div>
+    <div class="calculator" id="calculatorArea">
+      <div id="displayCompanyName" style="text-align:center; font-size:1.3rem; color:#0077b6; font-weight:700; min-height:1.7em;"></div>
+      <div id="currentDate" style="text-align:center; font-size:1rem; color:#555; font-weight:500; margin-bottom:0.5rem;"></div>
+      <h2>Pricing Calculator</h2>
+      <div class="form-group" style="display:flex; gap:0.5rem; align-items:flex-end;">
+        <div style="flex:1;">
+          <label for="paperPerRim">Paper per Rim Price (PKR)</label>
+          <input type="number" id="paperPerRim" min="0" value="0">
+        </div>
+        <div style="flex:1;">
+          <label for="rimQty">Rim Quantity</label>
+          <input type="number" id="rimQty" min="0" value="0">
+        </div>
+        <div style="flex:1;">
+          <label for="paperPrice">Paper Price (PKR)</label>
+          <input type="number" id="paperPrice" value="0" readonly style="background:#e9ecef;">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="printingPrice">Printing Price (PKR)</label>
+        <input type="number" id="printingPrice" min="0" value="0">
+      </div>
+      <div class="form-group">
+        <label for="others">Others (PKR)</label>
+        <input type="number" id="others" min="0" value="0">
+      </div>
+      <div class="form-group" style="display:flex; gap:0.5rem; align-items:flex-end;">
+        <div style="flex:1;">
+          <label for="tax">Tax (%)</label>
+          <input type="number" id="tax" min="0" max="100" value="0">
+        </div>
+        <div style="flex:1;">
+          <label for="profit">Profit (%)</label>
+          <input type="number" id="profit" min="0" max="100" value="0">
+        </div>
+      </div>
+      <div class="result" id="totalPrice">
+        <div>Subtotal <span id="subtotal">PKR 0.00</span></div>
+        <div>Tax <span id="taxAmount">PKR 0.00</span></div>
+        <div>Profit <span id="profitAmount">PKR 0.00</span></div>
+        <div class="final">Total Price: <span id="finalTotal">PKR 0.00</span></div>
+      </div>
+      <button id="downloadBtn" style="margin-top:1.5rem; width:100%; padding:0.7rem; background:#0077b6; color:#fff; border:none; border-radius:6px; font-size:1.1rem; font-weight:600; cursor:pointer;">Download as JPG</button>
+    </div>
+  </div>
+  <script>
+    // Display current date
+    function formatDate(date) {
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return date.toLocaleDateString(undefined, options);
+    }
+    document.getElementById('currentDate').textContent = `Date: ${formatDate(new Date())}`;
+
+    // Company Name live update
+    const companyNameInput = document.getElementById('companyName');
+    const displayCompanyName = document.getElementById('displayCompanyName');
+    companyNameInput.addEventListener('input', function() {
+      displayCompanyName.textContent = this.value;
+    });
+    // Initialize empty
+    displayCompanyName.textContent = '';
+
+    function updatePaperPrice() {
+      const paperPerRim = parseFloat(document.getElementById('paperPerRim').value) || 0;
+      const rimQty = parseFloat(document.getElementById('rimQty').value) || 0;
+      const paperPrice = paperPerRim * rimQty;
+      document.getElementById('paperPrice').value = paperPrice.toFixed(2);
+      return paperPrice;
+    }
+
+    function calculatePrice() {
+      const paperPrice = updatePaperPrice();
+      const printingPrice = parseFloat(document.getElementById('printingPrice').value) || 0;
+      const others = parseFloat(document.getElementById('others').value) || 0;
+      const tax = parseFloat(document.getElementById('tax').value) || 0;
+      const profit = parseFloat(document.getElementById('profit').value) || 0;
+      let subtotal = paperPrice + printingPrice + others;
+      let taxAmount = subtotal * (tax / 100);
+      let profitAmount = (subtotal + taxAmount) * (profit / 100);
+      let total = subtotal + taxAmount + profitAmount;
+      document.getElementById('subtotal').textContent = `PKR ${subtotal.toFixed(2)}`;
+      document.getElementById('taxAmount').textContent = `PKR ${taxAmount.toFixed(2)}`;
+      document.getElementById('profitAmount').textContent = `PKR ${profitAmount.toFixed(2)}`;
+      document.getElementById('finalTotal').textContent = `PKR ${total.toFixed(2)}`;
+    }
+
+    document.querySelectorAll('#paperPerRim, #rimQty, #printingPrice, #others, #tax, #profit').forEach(el => {
+      el.addEventListener('input', calculatePrice);
+    });
+
+    // Initial calculation
+    calculatePrice();
+
+    // Download as JPG functionality (hide button during capture)
+    document.getElementById('downloadBtn').addEventListener('click', function() {
+      const calculator = document.getElementById('calculatorArea');
+      const downloadBtn = document.getElementById('downloadBtn');
+      downloadBtn.style.display = 'none';
+      html2canvas(calculator, {backgroundColor: '#fff'}).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `quotation_${new Date().toISOString().slice(0,10)}.jpg`;
+        link.href = canvas.toDataURL('image/jpeg', 1.0);
+        link.click();
+        downloadBtn.style.display = '';
+      });
+    });
+  </script>
+</body>
+</html>
