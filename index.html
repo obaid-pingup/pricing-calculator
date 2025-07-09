@@ -86,26 +86,26 @@
   <!-- html2canvas CDN for screenshot functionality -->
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
-<body>
-  <div style="max-width: 350px; margin: 2rem auto 0 auto;">
-    <div class="form-group" style="margin-bottom: 1.2rem;">
+<body style="margin:0; padding:0; background:#f4f6fb; min-height:100vh;">
+  <div style="max-width: 400px; margin: 3.5rem auto 0 auto; padding: 0 1rem;">
+    <div class="form-group" style="margin-bottom: 1.7rem; margin-top: 1.7rem;">
       <label for="companyName" style="font-weight:600; color:#0077b6;">Company Name</label>
       <input type="text" id="companyName" placeholder="Enter Company Name" style="font-size:1.1rem; font-weight:600; border:2px solid #0077b6;">
     </div>
-    <div class="calculator" id="calculatorArea">
+    <div class="calculator" id="calculatorArea" style="margin-top: 0;">
       <div id="displayCompanyName" style="text-align:center; font-size:1.3rem; color:#0077b6; font-weight:700; min-height:1.7em;"></div>
       <div id="currentDate" style="text-align:center; font-size:1rem; color:#555; font-weight:500; margin-bottom:0.5rem;"></div>
       <h2>Pricing Calculator</h2>
-      <div class="form-group" style="display:flex; gap:0.5rem; align-items:flex-end;">
-        <div style="flex:1;">
+      <div class="form-group" style="display:flex; gap:0.5rem; align-items:flex-end; flex-wrap:wrap;">
+        <div style="flex:1; min-width:110px;">
           <label for="paperPerRim">Paper per Rim Price (PKR)</label>
           <input type="number" id="paperPerRim" min="0" placeholder="0">
         </div>
-        <div style="flex:1;">
+        <div style="flex:1; min-width:110px;">
           <label for="rimQty">Rim Quantity</label>
           <input type="number" id="rimQty" min="0" placeholder="0">
         </div>
-        <div style="flex:1;">
+        <div style="flex:1; min-width:110px;">
           <label for="paperPrice">Paper Price (PKR)</label>
           <input type="number" id="paperPrice" value="0" readonly style="background:#e9ecef;">
         </div>
@@ -118,12 +118,12 @@
         <label for="others">Others (PKR)</label>
         <input type="number" id="others" min="0" placeholder="0">
       </div>
-      <div class="form-group" style="display:flex; gap:0.5rem; align-items:flex-end;">
-        <div style="flex:1;">
+      <div class="form-group" style="display:flex; gap:0.5rem; align-items:flex-end; flex-wrap:wrap;">
+        <div style="flex:1; min-width:110px;">
           <label for="tax">Tax (%)</label>
           <input type="number" id="tax" min="0" max="100" placeholder="0">
         </div>
-        <div style="flex:1;">
+        <div style="flex:1; min-width:110px;">
           <label for="profit">Profit (%)</label>
           <input type="number" id="profit" min="0" max="100" placeholder="0">
         </div>
