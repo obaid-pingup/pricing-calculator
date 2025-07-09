@@ -47,6 +47,10 @@
       font-size: 1rem;
       box-sizing: border-box;
     }
+    input::placeholder {
+      color: #ccc;
+      font-style: italic;
+    }
     .result {
       margin-top: 1.5rem;
       padding: 1rem;
@@ -79,8 +83,8 @@
       }
     }
   </style>
-    <!-- html2canvas CDN for screenshot functionality -->
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <!-- html2canvas CDN for screenshot functionality -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
 <body>
   <div style="max-width: 350px; margin: 2rem auto 0 auto;">
@@ -95,11 +99,11 @@
       <div class="form-group" style="display:flex; gap:0.5rem; align-items:flex-end;">
         <div style="flex:1;">
           <label for="paperPerRim">Paper per Rim Price (PKR)</label>
-          <input type="number" id="paperPerRim" min="0" value="0">
+          <input type="number" id="paperPerRim" min="0" placeholder="0">
         </div>
         <div style="flex:1;">
           <label for="rimQty">Rim Quantity</label>
-          <input type="number" id="rimQty" min="0" value="0">
+          <input type="number" id="rimQty" min="0" placeholder="0">
         </div>
         <div style="flex:1;">
           <label for="paperPrice">Paper Price (PKR)</label>
@@ -108,20 +112,20 @@
       </div>
       <div class="form-group">
         <label for="printingPrice">Printing Price (PKR)</label>
-        <input type="number" id="printingPrice" min="0" value="0">
+        <input type="number" id="printingPrice" min="0" placeholder="0">
       </div>
       <div class="form-group">
         <label for="others">Others (PKR)</label>
-        <input type="number" id="others" min="0" value="0">
+        <input type="number" id="others" min="0" placeholder="0">
       </div>
       <div class="form-group" style="display:flex; gap:0.5rem; align-items:flex-end;">
         <div style="flex:1;">
           <label for="tax">Tax (%)</label>
-          <input type="number" id="tax" min="0" max="100" value="0">
+          <input type="number" id="tax" min="0" max="100" placeholder="0">
         </div>
         <div style="flex:1;">
           <label for="profit">Profit (%)</label>
-          <input type="number" id="profit" min="0" max="100" value="0">
+          <input type="number" id="profit" min="0" max="100" placeholder="0">
         </div>
       </div>
       <div class="result" id="totalPrice">
