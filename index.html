@@ -110,9 +110,15 @@
           <input type="number" id="paperPrice" value="0" readonly style="background:#e9ecef;">
         </div>
       </div>
-      <div class="form-group">
-        <label for="printingPrice">Printing Price (PKR)</label>
-        <input type="number" id="printingPrice" min="0" placeholder="0">
+      <div class="form-group" style="display:flex; gap:0.5rem; align-items:flex-end; flex-wrap:wrap;">
+        <div style="flex:2; min-width:110px;">
+          <label for="printingPrice">Printing Price (PKR)</label>
+          <input type="number" id="printingPrice" min="0" placeholder="0">
+        </div>
+        <div style="flex:1; min-width:90px;">
+          <label for="quantity">Quantity</label>
+          <input type="number" id="quantity" min="1" placeholder="0">
+        </div>
       </div>
       <div class="form-group">
         <label for="others">Others (PKR)</label>
@@ -132,7 +138,8 @@
         <div>Subtotal <span id="subtotal">PKR 0.00</span></div>
         <div>Tax <span id="taxAmount">PKR 0.00</span></div>
         <div>Profit <span id="profitAmount">PKR 0.00</span></div>
-        <div class="final">Total Price: <span id="finalTotal">PKR 0.00</span></div>
+        <div class="unit-price" style="color:#0077b6; font-size:1.3rem; font-weight:900; text-align:center; margin:0.7rem 0 0.2rem 0;">Unit Price: <span id="unitPrice"><span class='placeholder-zero' style='color:#ccc;'>0</span></span></div>
+        <div class="final" style="color:#0077b6; font-size:1.6rem; font-weight:900; text-align:center; letter-spacing:1px; text-shadow:0 2px 8px rgba(0,119,182,0.08);">Total Price: <span id="finalTotal"><span class='placeholder-zero' style='color:#ccc;'>0</span></span></div>
       </div>
       <button id="downloadBtn" style="margin-top:1.5rem; width:100%; padding:0.7rem; background:#0077b6; color:#fff; border:none; border-radius:6px; font-size:1.1rem; font-weight:600; cursor:pointer;">Download as JPG</button>
     </div>
@@ -165,20 +172,32 @@
     function calculatePrice() {
       const paperPrice = updatePaperPrice();
       const printingPrice = parseFloat(document.getElementById('printingPrice').value) || 0;
+      const quantity = parseFloat(document.getElementById('quantity').value) || 0;
       const others = parseFloat(document.getElementById('others').value) || 0;
       const tax = parseFloat(document.getElementById('tax').value) || 0;
       const profit = parseFloat(document.getElementById('profit').value) || 0;
+
       let subtotal = paperPrice + printingPrice + others;
       let taxAmount = subtotal * (tax / 100);
       let profitAmount = (subtotal + taxAmount) * (profit / 100);
-      let total = subtotal + taxAmount + profitAmount;
+
       document.getElementById('subtotal').textContent = `PKR ${subtotal.toFixed(2)}`;
       document.getElementById('taxAmount').textContent = `PKR ${taxAmount.toFixed(2)}`;
       document.getElementById('profitAmount').textContent = `PKR ${profitAmount.toFixed(2)}`;
-      document.getElementById('finalTotal').textContent = `PKR ${total.toFixed(2)}`;
+
+      if (quantity > 0) {
+        let unitPrice = subtotal + taxAmount + profitAmount;
+        unitPrice = unitPrice / quantity;
+        document.getElementById('unitPrice').innerHTML = `PKR ${unitPrice.toFixed(2)}`;
+        let totalPrice = unitPrice * quantity;
+        document.getElementById('finalTotal').innerHTML = `PKR ${totalPrice.toFixed(2)}`;
+      } else {
+        document.getElementById('unitPrice').innerHTML = "<span class='placeholder-zero' style='color:#ccc;'>0</span>";
+        document.getElementById('finalTotal').innerHTML = "<span class='placeholder-zero' style='color:#ccc;'>0</span>";
+      }
     }
 
-    document.querySelectorAll('#paperPerRim, #rimQty, #printingPrice, #others, #tax, #profit').forEach(el => {
+    document.querySelectorAll('#paperPerRim, #rimQty, #printingPrice, #quantity, #others, #tax, #profit').forEach(el => {
       el.addEventListener('input', calculatePrice);
     });
 
